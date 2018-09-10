@@ -13,5 +13,13 @@ public class BootwebApplication {
 
     System.out.println("Main Application is starting!");
 
+
+    System.out.println("Elves is in the home");
+
+  }
+
+
+  public static void help() {
+
   }
 }
