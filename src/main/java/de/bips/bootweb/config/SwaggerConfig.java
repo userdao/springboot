@@ -19,7 +19,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
   @Bean
   public Docket productApi() {
-    return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+    return new Docket(DocumentationType.SWAGGER_2).select()
+        .apis(RequestHandlerSelectors.basePackage("de.bips.bootweb.controller"))
         .paths(PathSelectors.any()).build().apiInfo(projectInfo());
 
   }
@@ -28,8 +29,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     return new ApiInfoBuilder().title("Modys REST API").description("<b>REST API for ModysNG</b>")
         .version("1.0.0").license("Apache License Version 2.0")
         .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
-        .contact(new Contact("Hauke Lünzmann", "https://www.bips-institut.de/home.html",
-            "luenz@leibniz-bips.de"))
+        .contact(
+            new Contact("BIPS", "https://www.bips-institut.de/home.html", "luenz@leibniz-bips.de"))
         .build();
 
   }

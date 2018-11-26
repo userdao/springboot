@@ -66,6 +66,13 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         
+        <!-- Spring Jooq alternative to JPA  -->
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
+        
         <!-- Swagger with Json -->   
         <dependency>
 			<groupId>com.jayway.jsonpath</groupId>
@@ -101,6 +108,60 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+					<!-- Specify the maven code generator plugin -->
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.10.0</version>
+				<!-- The plugin should hook into the generate goal -->
+					<executions>
+						<execution>
+							<goals>
+								<goal>generate</goal>
+							</goals>
+						</execution>
+					</executions>
+				
+					<dependencies>
+						<dependency>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>6.0.6</version>
+						</dependency>
+					</dependencies>
+				
+					<!-- Specify the plugin configuration. The configuration format is the 
+					same as for the standalone code generator -->
+					<configuration>
+						<!-- JDBC connection parameters -->
+						<jdbc>
+							<driver>com.mysql.cj.jdbc.Driver</driver>
+							<url>jdbc:mysql://localhost:3306/modysng?autoReconnect=true&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</url>
+							<user>root</user>
+							<password></password>
+						</jdbc>
+				
+						<!-- Generator parameters -->
+						<generator>
+							<name>org.jooq.util.DefaultGenerator</name>
+							<database>
+								<name>org.jooq.util.mysql.MySQLDatabase</name>
+								<includes>.*</includes>
+								<excludes></excludes>
+								<inputSchema>modysng</inputSchema>
+							</database>
+							<target>
+								<packageName>de.bips.bootweb.models.generated</packageName>
+								<directory>src/main/java</directory>
+							</target>
+							<generate>
+								<daos>true</daos>
+								<pojos>true</pojos>
+							</generate>
+					   </generator>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 	</build>
 

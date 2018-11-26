@@ -1,11 +1,15 @@
 package de.bips.bootweb.controller;
 
-import de.bips.bootweb.models.User;
-import de.bips.bootweb.repos.UserRepository;
+
+import static de.bips.bootweb.models.generated.Tables.T_CAL_TOPIC;
+import static de.bips.bootweb.models.generated.Tables.T_PERSON;
+import de.bips.bootweb.models.generated.tables.pojos.TCalTopic;
+import de.bips.bootweb.models.generated.tables.pojos.TPerson;
+import java.util.List;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,29 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloWorld {
 
   @Autowired
-  private UserRepository userRepository;
+  private DSLContext create;
 
-  @GetMapping(path = "/add") // Map ONLY GET Requests
-  public String addNewUser(@RequestParam String name, @RequestParam String email) {
-    return "Saved";
+
+  @GetMapping(path = "/listPersons")
+  public List<TPerson> getAllPersons() {
+    return create.selectFrom(T_PERSON).fetch().into(TPerson.class);
   }
 
-
-  @GetMapping(path = "/all")
-  public Iterable<User> getAllUsers() {
-    // This returns a JSON or XML with the users
-    return userRepository.findAll();
-  }
-
-  @GetMapping(path = "/mail")
-  public Iterable<User> getAllUsersByEmail(@RequestParam String email) {
-    return userRepository.findByEmail(email);
-  }
-
-
-  @GetMapping(path = "/maildelete")
-  public Integer deleteByEmail(@RequestParam String email) {
-    return userRepository.deleteByEmail(email);
+  @GetMapping(path = "/topics")
+  public List<TCalTopic> getAllTopics() {
+    return create.selectFrom(T_CAL_TOPIC).fetch().into(TCalTopic.class);
   }
 
 
