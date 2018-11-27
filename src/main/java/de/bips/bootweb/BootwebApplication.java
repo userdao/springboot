@@ -17,9 +17,4 @@ public class BootwebApplication {
     logger.info("BootwebApplication is starting!");
 
   }
-  
-  
-  public static void help() {
-
-  }
 }

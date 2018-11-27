@@ -135,10 +135,10 @@
 					<configuration>
 						<!-- JDBC connection parameters -->
 						<jdbc>
-							<driver>com.mysql.cj.jdbc.Driver</driver>
-							<url>jdbc:mysql://localhost:3306/modysng?autoReconnect=true&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</url>
-							<user>root</user>
-							<password></password>
+							 <driver>com.mysql.cj.jdbc.Driver</driver>
+							 <url>${spring.datasource.url}</url>
+                             <user>${spring.datasource.username}</user>
+							<password>${spring.datasource.password}</password>
 						</jdbc>
 				
 						<!-- Generator parameters -->
@@ -148,7 +148,7 @@
 								<name>org.jooq.util.mysql.MySQLDatabase</name>
 								<includes>.*</includes>
 								<excludes></excludes>
-								<inputSchema>modysng</inputSchema>
+								<inputSchema>${database.sheme.name}</inputSchema>
 							</database>
 							<target>
 								<packageName>de.bips.bootweb.models.generated</packageName>
@@ -161,6 +161,26 @@
 					   </generator>
 				</configuration>
 			</plugin>
+			<!-- Plugin to Read properties from files for maven properties -->
+			 <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/main/resources/application.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			
 			
 		</plugins>
 	</build>
