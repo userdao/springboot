@@ -4,6 +4,7 @@ package de.bips.bootweb.controller;
 import static de.bips.bootweb.models.generated.Tables.T_CAL_SLOT;
 import static org.jooq.impl.DSL.timestamp;
 import de.bips.bootweb.models.generated.tables.pojos.TCalSlot;
+import de.bips.bootweb.service.RestClientService;
 import de.bips.bootweb.utility.DateUtil;
 import java.time.LocalDate;
 import java.util.Date;
@@ -26,9 +27,12 @@ public class HelloWorld {
   @Autowired
   private DSLContext create;
 
+  @Autowired
+  private RestClientService restClient;
+
   @GetMapping(path = "/idRequest")
   public void idRequest() {
-    // TODO
+    restClient.exchange("http://localhost:8080/webmodys/ths/dailySlots");
   }
 
   @PutMapping(path = "/idResponse")
