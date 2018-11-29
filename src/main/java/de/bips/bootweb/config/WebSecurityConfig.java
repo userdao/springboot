@@ -2,13 +2,18 @@ package de.bips.bootweb.config;
 
 import de.bips.bootweb.service.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -19,29 +24,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private UserDetailsService userDetailsService;
 
 
-  private static final String[] AUTH_WHITELIST = {
-      // -- swagger ui
-      "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
+  private static final String[] AUTH_WHITELIST =
+      {"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
+
+  private static final String[] ADMIN_GRANT = {"/ths/**"};
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
+    http.csrf().disable().authorizeRequests().antMatchers(ADMIN_GRANT).hasRole("ADMIN").and()
+        .httpBasic().realmName("ModysAPI").and().sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    // (1)
-    // http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().antMatchers("/**/*").denyAll();
-
-    // (2) http.authorizeRequests().antMatchers("/noSecurity").hasRole("ADMIN").anyRequest()
-    // .authenticated().and().formLogin().loginPage("/login").permitAll().and().logout()
-    // .permitAll().and().exceptionHandling().accessDeniedPage("/Access_Denied");
-
-    // (3) http.authorizeRequests().antMatchers(HttpMethod.POST, "/account").permitAll()
-    // .antMatchers(HttpMethod.GET, "/account").hasAuthority("ROLE_ADMIN").anyRequest()
-    // .fullyAuthenticated().and().httpBasic().and().csrf().disable();
   }
+
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    web.ignoring().antMatchers(AUTH_WHITELIST);
+  }
+
+
 
   @Autowired
   public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService);
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 
 }
