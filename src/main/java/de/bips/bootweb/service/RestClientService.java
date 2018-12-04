@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,10 +35,12 @@ public class RestClientService {
 
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
-    String responseBody =
-        restTemplate.exchange(endpoint, HttpMethod.GET, entity, String.class).getBody();
+    ResponseEntity<String> responseEntity =
+        restTemplate.exchange(endpoint, HttpMethod.GET, entity, String.class);
 
-    logger.info("endpoint redirect: {}", responseBody);
+
+
+    logger.info("endpoint redirect: {}", responseEntity.getBody());
 
   }
 
