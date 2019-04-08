@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/ths")
+@CrossOrigin
 public class ThsController {
 
   private static final Logger logger = LoggerFactory.getLogger(ThsController.class);
@@ -39,7 +41,7 @@ public class ThsController {
   }
 
   @GetMapping("/customHeader")
-  ResponseEntity<List<TCalSlot>> getDailySlotsHeader() {
+  public ResponseEntity<List<TCalSlot>> getDailySlotsHeader() {
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Custom-Header", "foo");
@@ -54,8 +56,10 @@ public class ThsController {
         .where(T_CAL_SLOT.SLOT_START.greaterOrEqual(timestamp(nowDate)))
         .and(T_CAL_SLOT.SLOT_START.lessThan(timestamp(plusOne))).fetchInto(TCalSlot.class);
 
+    if (slotList.isEmpty()) {
+      return new ResponseEntity<>(slotList, HttpStatus.NOT_FOUND);
+    }
     return new ResponseEntity<>(slotList, headers, HttpStatus.OK);
-
   }
 
   @PutMapping(path = "/idResponse")
@@ -69,7 +73,7 @@ public class ThsController {
   }
 
   @GetMapping(path = "/dailySlots")
-  public List<TCalSlot> getDailySlots() {
+  public ResponseEntity<List<TCalSlot>> getDailySlots() {
 
     LocalDate now = LocalDate.now();
     Date nowDate = DateUtil.localDateToDate(now);
@@ -77,9 +81,14 @@ public class ThsController {
 
     logger.info("Date between {} and {}", nowDate, plusOne);
 
-    return create.selectFrom(T_CAL_SLOT)
+    List<TCalSlot> slotList = create.selectFrom(T_CAL_SLOT)
         .where(T_CAL_SLOT.SLOT_START.greaterOrEqual(timestamp(nowDate)))
         .and(T_CAL_SLOT.SLOT_START.lessThan(timestamp(plusOne))).fetchInto(TCalSlot.class);
+
+    if (slotList.isEmpty()) {
+      return new ResponseEntity<>(slotList, HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(slotList, HttpStatus.OK);
   }
 
 
