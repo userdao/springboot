@@ -1,6 +1,5 @@
 package de.bips.bootweb.config;
 
-import de.bips.bootweb.service.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import de.bips.bootweb.service.AuthenticatedUserService;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private static final String[] AUTH_WHITELIST =
       {"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
 
-  private static final String[] ADMIN_GRANT = {"/ths/**"};
+  private static final String[] ADMIN_GRANT = {"/ths/**", "/api/**"};
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -45,11 +45,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
 
-
-  @Autowired
-  public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
   }
+
+
+  // @Autowired
+  // public void globalSecurityConfiguration(AuthenticationManagerBuilder auth) throws Exception {
+  // auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+  // }
 
 
 

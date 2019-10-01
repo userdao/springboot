@@ -4,8 +4,8 @@
         <div th:replace="fragments/headerAndNav :: navbar"/>
         <div class="container">
             <p th:each="user : ${users}">
-				password: <td th:text="${user.password}"></td>;
-				Name: <td th:text="${user.name}"></td>		
+				password: <td th:text="${user.personId}"></td>;
+				Name: <td th:text="${user.identifierNameLanguageKey}"></td>		
 					
 		  </p>
         </div>

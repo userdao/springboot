@@ -27,7 +27,7 @@ public class RestClientService {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-    String auth = "cici:cici";// user:password
+    String auth = "swagger:test";// user:password
     byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
     String authHeader = "Basic " + new String(encodedAuth);
 
