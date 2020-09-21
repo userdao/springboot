@@ -2,6 +2,7 @@ package de.bips.bootweb.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import de.bips.bootweb.dto.Appointment;
+import de.bips.bootweb.models.generated.tables.pojos.TCalSlot;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonIdentifierOverview;
 import de.bips.bootweb.models.generated.tables.records.VPersonIdentifierOverviewRecord;
 import de.bips.bootweb.service.UserService;
@@ -53,5 +56,30 @@ public class ApiPropandController {
         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
   }
+
+  // @GetMapping(path = "/userAppointment")
+  public ResponseEntity<List<Appointment>> getUserApppointment(@RequestParam String id) {
+
+    List<TCalSlot> appointment = userService.getUserAppointment(id);
+    List<Appointment> slots =
+        appointment.stream().map(Appointment::new).collect(Collectors.toList());
+    if (slots.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(slots, HttpStatus.OK);
+  }
+
+  @GetMapping(path = "/userAppointment")
+
+  // EndPoint for testing Daos
+  public ResponseEntity<Object> getUserAppointment(@RequestParam String id) {
+
+    userService.getUserAppointmentWithTopLoc(id);
+    userService.appointmentDao(id);
+    userService.appointmentWithHandler(id);
+
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
+
 
 }
