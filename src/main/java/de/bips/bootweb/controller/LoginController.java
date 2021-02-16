@@ -21,7 +21,7 @@ public class LoginController {
   @RequestMapping("/login")
   public String login(Model model) {
 
-    restClient.exchange("http://localhost:8080/webmodys/api/listUsers");
+    restClient.exchange("http://localhost:8080/webmodys/api/probands");
 
     return "login";
   }
