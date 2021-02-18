@@ -3,10 +3,13 @@ package de.bips.bootweb.controller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +33,12 @@ public class ApiPropandController {
   private UserService userService;
 
 
+  @Autowired
+  private PasswordEncoder encoder; // add later to another controller class z.b.
+                                   // 'authenticationController'
+
+  private static final Logger logger = LoggerFactory.getLogger(ApiPropandController.class);
+
   @GetMapping(path = "/probands",
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<VPersonOverview>> getAllProbands() {
@@ -46,14 +55,6 @@ public class ApiPropandController {
         .map(
             record -> ResponseEntity.status(HttpStatus.OK).body(record.into(VPersonOverview.class)))
         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new VPersonOverview()));
-
-
-    // if (person.isPresent()) {
-    // return new ResponseEntity<>(person.get().into(VPersonOverview.class), HttpStatus.OK);
-    // }
-    //
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    // .body(new StringBuilder("No Proband with Id: ").append(id).append(" found!"));
   }
 
   @GetMapping(path = "/probandAddresses/{probandId}",
@@ -125,6 +126,15 @@ public class ApiPropandController {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(affectedRows);
     }
 
+  }
+
+  // add later to another controller class z.b. 'authenticationController'
+  @PostMapping(path = "/newpasswordtoken/{password}/", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<String> getBycript(@PathVariable String password) {
+
+    String bycriptPassword = encoder.encode(password);
+    logger.info("Bycript:{}", bycriptPassword);
+    return ResponseEntity.status(HttpStatus.CREATED).body(bycriptPassword);
   }
 
 
