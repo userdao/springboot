@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import de.bips.bootweb.models.generated.tables.pojos.TAddress;
@@ -108,6 +109,22 @@ public class ApiPropandController {
     return proband.map(result -> result.into(VPersonIdentifierOverview.class))
         .map(row -> ResponseEntity.status(HttpStatus.OK).body(row.getPersonId()))
         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+  }
+
+  @PostMapping(path = "/newIdentifierForProband/{probandId}/{identifierTypeId}/{newId}")
+  public ResponseEntity<Integer> setNewIdentifierforProband(@PathVariable String probandId,
+      @PathVariable int identifierTypeId, @PathVariable String newId) {
+
+    int affectedRows = userService.setNewIdentifier(probandId, identifierTypeId, newId);
+
+    if (affectedRows == 0) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(affectedRows);
+    } else if (affectedRows == 1) {
+      return ResponseEntity.status(HttpStatus.CREATED).body(affectedRows);
+    } else {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(affectedRows);
+    }
+
   }
 
 

@@ -1,9 +1,14 @@
 package de.bips.bootweb.service;
 
 import static de.bips.bootweb.models.generated.Tables.T_ADDRESS;
+import static de.bips.bootweb.models.generated.Tables.T_IDENTIFIER;
+import static de.bips.bootweb.models.generated.Tables.T_PERSON;
+import static de.bips.bootweb.models.generated.Tables.T_PERSON_IDENTIFIER;
 import static de.bips.bootweb.models.generated.Tables.V_PERSON_CONTACT_DETAIL_OVERVIEW;
 import static de.bips.bootweb.models.generated.Tables.V_PERSON_IDENTIFIER_OVERVIEW;
 import static de.bips.bootweb.models.generated.Tables.V_PERSON_OVERVIEW;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jooq.DSLContext;
@@ -65,6 +70,24 @@ public class UserService {
     return Optional.ofNullable(create.fetchOne(V_PERSON_IDENTIFIER_OVERVIEW,
         V_PERSON_IDENTIFIER_OVERVIEW.PERSON_ID.eq(probandId)
             .and(V_PERSON_IDENTIFIER_OVERVIEW.IDENTIFIER_ID.eq(intidentifierTypeId))));
+
+  }
+
+  public int setNewIdentifier(String probandId, int identifierTypeId, String newId) {
+
+    Date now = new Date();
+
+    if (!create.fetchExists(T_PERSON, T_PERSON.PID.eq(probandId))) {
+      return 0;
+    } else if (!create.fetchExists(T_IDENTIFIER, T_IDENTIFIER.IDENTIFIER_ID.eq(identifierTypeId))) {
+      return 0;
+    } else {
+      return create
+          .insertInto(T_PERSON_IDENTIFIER, T_PERSON_IDENTIFIER.CREATE_USER,
+              T_PERSON_IDENTIFIER.FK_PID, T_PERSON_IDENTIFIER.FK_IDENTIFIER_ID,
+              T_PERSON_IDENTIFIER.VALUE, T_PERSON_IDENTIFIER.VALID_FROM)
+          .values(1, probandId, identifierTypeId, newId, new Timestamp(now.getTime())).execute();
+    }
 
   }
 
