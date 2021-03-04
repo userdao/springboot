@@ -47,7 +47,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     return new ApiInfoBuilder().title("Modys REST API").description("<b>REST API for ModysNG</b>")
         .version("1.0.0").license("Apache License Version 2.0")
         .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
-        .contact(new Contact("FLIPS", "https://www.Test.vu", "dao@flips.de")).build();
+        .contact(new Contact("BIPS", "https://www.bips-institut.de/home.html", "dao@flips.de"))
+        .build();
 
   }
 
