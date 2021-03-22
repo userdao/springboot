@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import de.bips.bootweb.models.generated.tables.pojos.TAddress;
+import de.bips.bootweb.models.generated.tables.pojos.TCdType;
+import de.bips.bootweb.models.generated.tables.pojos.TIdentifier;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonContactDetailOverview;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonIdentifierOverview;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonOverview;
@@ -135,6 +137,20 @@ public class ApiPropandController {
     String bycriptPassword = encoder.encode(password);
     logger.info("Bycript:{}", bycriptPassword);
     return ResponseEntity.status(HttpStatus.CREATED).body(bycriptPassword);
+  }
+
+  @GetMapping(path = "/contactDetails",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<List<TCdType>> getContactDetails() {
+    List<TCdType> contactDetails = userService.getContactDetails();
+    return ResponseEntity.status(HttpStatus.OK).body(contactDetails);
+  }
+
+  @GetMapping(path = "/identifiers",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<List<TIdentifier>> getIdentifiers() {
+    List<TIdentifier> identifiers = userService.getIdentifiers();
+    return ResponseEntity.status(HttpStatus.OK).body(identifiers);
   }
 
 

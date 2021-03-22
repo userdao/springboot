@@ -1,6 +1,7 @@
 package de.bips.bootweb.service;
 
 import static de.bips.bootweb.models.generated.Tables.T_ADDRESS;
+import static de.bips.bootweb.models.generated.Tables.T_CD_TYPE;
 import static de.bips.bootweb.models.generated.Tables.T_IDENTIFIER;
 import static de.bips.bootweb.models.generated.Tables.T_PERSON;
 import static de.bips.bootweb.models.generated.Tables.T_PERSON_IDENTIFIER;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import de.bips.bootweb.models.generated.tables.pojos.TAddress;
+import de.bips.bootweb.models.generated.tables.pojos.TCdType;
+import de.bips.bootweb.models.generated.tables.pojos.TIdentifier;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonContactDetailOverview;
 import de.bips.bootweb.models.generated.tables.pojos.VPersonOverview;
 import de.bips.bootweb.models.generated.tables.records.VPersonIdentifierOverviewRecord;
@@ -89,6 +92,15 @@ public class UserService {
           .values(1, probandId, identifierTypeId, newId, new Timestamp(now.getTime())).execute();
     }
 
+  }
+
+  public List<TCdType> getContactDetails() {
+    return create.fetch(T_CD_TYPE).into(TCdType.class);
+  }
+
+
+  public List<TIdentifier> getIdentifiers() {
+    return create.fetch(T_IDENTIFIER).into(TIdentifier.class);
   }
 
 
