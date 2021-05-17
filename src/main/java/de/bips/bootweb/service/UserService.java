@@ -98,9 +98,26 @@ public class UserService {
     return create.fetch(T_CD_TYPE).into(TCdType.class);
   }
 
+  public TCdType getContactdetailByName(String nameFKLang) {
+    return create.fetchOne(T_CD_TYPE, T_CD_TYPE.NAME_FK_LANG.eq(nameFKLang)).into(TCdType.class);
+  }
+
+  public TCdType getContactdetailById(int cdTypeId) {
+    return create.fetchOne(T_CD_TYPE, T_CD_TYPE.CD_TYPE_ID.eq(cdTypeId)).into(TCdType.class);
+  }
 
   public List<TIdentifier> getIdentifiers() {
     return create.fetch(T_IDENTIFIER).into(TIdentifier.class);
+  }
+
+  public TIdentifier getIdentifierByName(String nameFKLang) {
+    return create.fetchOne(T_IDENTIFIER, T_IDENTIFIER.NAME_FK_LANG.eq(nameFKLang))
+        .into(TIdentifier.class);
+  }
+
+  public TIdentifier getIdentifierById(int identifierId) {
+    return create.fetchOne(T_IDENTIFIER, T_IDENTIFIER.IDENTIFIER_ID.eq(identifierId))
+        .into(TIdentifier.class);
   }
 
 

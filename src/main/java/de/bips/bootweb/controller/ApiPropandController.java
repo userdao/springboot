@@ -146,11 +146,41 @@ public class ApiPropandController {
     return ResponseEntity.status(HttpStatus.OK).body(contactDetails);
   }
 
+
+  @GetMapping(path = "/contactDetailByName/{nameFKLang}/",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<TCdType> getContactDetailByName(@PathVariable String nameFKLang) {
+    TCdType contactDetail = userService.getContactdetailByName(nameFKLang);
+    return ResponseEntity.status(HttpStatus.OK).body(contactDetail);
+  }
+
+  @GetMapping(path = "/contactDetailByTypeId/{cdTypeId}/",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<TCdType> getContactDetailByTypeId(@PathVariable Integer cdTypeId) {
+    TCdType contactDetail = userService.getContactdetailById(cdTypeId);
+    return ResponseEntity.status(HttpStatus.OK).body(contactDetail);
+  }
+
   @GetMapping(path = "/identifiers",
       produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<TIdentifier>> getIdentifiers() {
     List<TIdentifier> identifiers = userService.getIdentifiers();
     return ResponseEntity.status(HttpStatus.OK).body(identifiers);
+  }
+
+
+  @GetMapping(path = "/identifierByName/{nameFKLang}/",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<TIdentifier> getIdentifierByName(@PathVariable String nameFKLang) {
+    TIdentifier identifiers = userService.getIdentifierByName(nameFKLang);
+    return ResponseEntity.status(HttpStatus.OK).body(identifiers);
+  }
+
+  @GetMapping(path = "/identifierById/{identifierId}/",
+      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<TIdentifier> getIdentifierId(@PathVariable Integer identifierId) {
+    TIdentifier identifier = userService.getIdentifierById(identifierId);
+    return ResponseEntity.status(HttpStatus.OK).body(identifier);
   }
 
 
